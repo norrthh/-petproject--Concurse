@@ -1,0 +1,101 @@
+@import "/public/fonts/SourceSansPro/stylesheet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Source Sans Pro';
+    font-size: 14pt;
+}
+
+.newsIndex {
+    margin-right: 1rem;
+}
+
+.newsIndex .img {
+    height: 361px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+
+.news, .newsIndex {
+    box-shadow: 0px 4px 30px rgba(22, 49, 82, 0.12);
+    background: #FDFDFF;
+}
+
+.newsIndex .contentNews {
+    padding: 40px;
+}
+
+.newsIndex .contentNews .titleNews {
+    font-weight: 600;
+    font-size: 22px;
+    color: #163152;
+
+}
+
+.newsIndex .contentNews .subtitleNews {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 26px;
+    color: #283C54;
+    padding-top: 11px;
+}
+
+.newsIndex .contentNews .authorPost {
+    color: rgba(40, 60, 84, 0.5);
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.news {
+    display: block;
+}
+
+.news .contentNews {
+    padding: 20px;
+}
+
+.news .contentNews .titleNews {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: #163152;
+}
+
+.news .contentNews p {
+    padding-top: 10px;
+}
+
+.news .contentNews .authorPost p {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(40, 60, 84, 0.5);
+}
+
+
+.dropdown {
+    @apply z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600
+}
+
+.dropdown ul {
+    @apply py-2 text-sm text-gray-700 dark:text-gray-200
+}
+
+.dropdown ul li {
+    font-size: 1rem;
+    @apply block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white
+}
+
+.contentSettings {
+    margin-left: 2rem;
+    width: 100%;
+}
+
+.contentSettings h2{
+    font-size: 1.75rem;
+}
