@@ -118,7 +118,7 @@ export default {
             form.append('file', event.target.files[0])
 
             axios.get('/sanctum/csrf-cookie').then(response => {
-                axios.post('/api/v1/uploadImage', form, {
+                axios.post('/api/v1/user/post/uploadImage', form, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: 'Bearer ' + localStorage.getItem('api_token')
@@ -142,7 +142,7 @@ export default {
             });
         },
         createPost() {
-            axios.post('/api/v1/news/create', {
+            axios.post('/api/v1/user/post/create', {
                 'namePost': this.namePost,
                 'informationPost': this.informationPost,
                 'images1': this.input_file_1,

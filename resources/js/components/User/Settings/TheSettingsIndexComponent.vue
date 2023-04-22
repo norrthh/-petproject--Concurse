@@ -1,37 +1,51 @@
 <template>
     <div class="container mx-auto pt-16 pb-32">
         <div class="flex">
-            <div style="width:20%" class="navbarSettings">
-                <p class="text-gray-500 font-semibold" style="font-size: 11pt;">Аккаунт</p>
+            <v-user-header></v-user-header>
 
-                <router-link to="/user/settings">Аватар</router-link>
-                <router-link to="/index">Аватар</router-link>
-            </div>
             <div class="contentSettings">
 
                 <v-alert-danger class="w-full" :message="alertDangerMessage" v-if="alertDangerStatus"></v-alert-danger>
                 <v-alert-success class="w-full" :message="alertSuccessMessage" v-if="alertSuccessMessage"/>
-                <h2>Аватар</h2>
+                <h2>Управление аккаунтом</h2>
 
-                <div class="flex pt-3">
-                    <img :src="avatar" class="avatar">
 
-                    <div class="groupButton">
-                        <button class="btn_upload">
-                            <label for="uploadAvatar">
-                                Загрузить аватар
-                                <input type="file" id="uploadAvatar" class="hidden" multiple @change="uploadAvatar">
-                            </label>
-                        </button>
+                <div class="mt-4">
+                    <h4>Основное</h4>
 
-                        <button class="btn_delete" @click="deleteAvatar">Удалить аватар</button>
+                    <div class="mt-3">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p>Отображаемое имя</p>
+                                <input type="text" class="fixInput" placeholder="norrthh" v-model="name">
+                                <p class="text-sm text-gray-500">Это имя будет отображаться везде на сайте.</p>
+                            </div>
+                            <div>
+                                <p>Ваш Email</p>
+                                <input type="email" class="fixInput" placeholder="galem@yandex.ru" v-model="email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-10">Соцсети</h4>
+
+                    <div class="mt-3">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p>Вконтакте</p>
+                                <input type="text" class="fixInput" placeholder="norrthh" v-model="socialVK">
+                            </div>
+                            <div>
+                                <p>Telegram</p>
+                                <input type="text" class="fixInput" placeholder="norrthh" v-model="socialTG">
+                            </div>
+                        </div>
+
+                        <p class="text-gray-400 text-sm font-medium">Не указывайте полную ссылку, достаточно указать ваш логин.</p>
                     </div>
                 </div>
 
-                <div class="information">
-                    <p>Изображение формата jpg,png, jpeg и gif.</p>
-                    <p>Рекомендуемый размер 128х128 пикс. </p>
-                </div>
+                <button class="ml-auto block mr-auto mt-3 bg-blue-500 p-3 text-white rounded-xl text-sm w-32 hover:bg-blue-700" @click="updateDateAccount">Сохранить</button>
             </div>
         </div>
     </div>
@@ -48,55 +62,22 @@ export default {
             alertDangerMessage: '',
 
             alertSuccessStatus: false,
-            alertSuccessMessage: ''
+            alertSuccessMessage: '',
+
+            name: '',
+            email: '',
+            socialVK: '',
+            socialTG: ''
         }
     },
 
     mounted() {
-        this.avatar = localStorage.getItem('account_avatar')
+        this.getDateSession()
     },
 
     methods: {
-        uploadAvatar(event) {
-            let formData = new FormData();
-            formData.append('file', event.target.files[0]);
-
-            axios.post('/api/v1/user/uploadAvatar', formData, {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('api_token'),
-                    'Content-Type': 'multipart/form-data',
-                }
-            })
-                .then(res => {
-                    localStorage.setItem('account_avatar', res.data.urlAvatar)
-                    this.avatar = res.data.urlAvatar
-                    this.$emit('avatarUser', res.data.urlAvatar)
-
-                    this.alert('Вы успешно обновили аватарку', 1);
-                })
-
-                .catch(error => {
-                    this.alert(error.response.data.errors.file[1], 2)
-                })
-        },
-        deleteAvatar() {
-            axios.post('/api/v1/user/deleteAvatar', {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('api_token'),
-                }
-            })
-                .then(res => {
-                    localStorage.setItem('account_avatar', res.data.urlAvatar)
-                    this.avatar = res.data.urlAvatar
-                    this.$emit('avatarUser', res.data.urlAvatar)
-
-                    this.alert('Вы успешно удалили аватарку', 1);
-                })
-        },
-
         alert(message, status) {
             if (status === 1) {
-
                 this.alertDangerStatus = false;
                 this.alertSuccessStatus = true;
                 this.alertSuccessMessage = message;
@@ -106,62 +87,47 @@ export default {
                 this.alertDangerStatus = true;
                 this.alertDangerMessage = message;
             }
+        },
+
+        getDateSession()    {
+            let user = JSON.parse(localStorage.getItem('account'))
+
+            this.name = user.name
+            this.email = user.email
+            this.socialVK = user.social_vk
+            this.socialTG = user.social_telegram
+        },
+        updateDateAccount() {
+
+            let data = {
+                email: this.email,
+                social_vk: this.socialVK,
+                social_telegram: this.socialTG,
+                name: this.name
+            };
+
+
+            if(data.email === JSON.parse(localStorage.getItem('account')).email) {
+                delete data['email']
+            }
+
+
+            axios.post('/api/v1/user/edit/settings', data)
+                .then(res => {
+                    localStorage.setItem('account', JSON.stringify(res.data))
+                    localStorage.setItem('account_name', res.data.name)
+
+                    this.alert('Вы успешно обновили значения', 1)
+                })
+                .catch(error => {
+                    // console.log(error.response.data.message)
+                    this.alert(error.response.data.message, 2)
+                })
         }
     }
 }
 </script>
 
 <style scoped>
-.navbarSettings a {
-    width: 100%;
-    color: #152C5B;
-    padding: .2rem .5rem;
-    border-radius: .25rem;
-    @apply text-base block mt-3
-}
 
-.router-link-active {
-    color: #fff !important;
-    @apply bg-blue-500 rounded-sm
-}
-
-.avatar {
-    width: 150px;
-    height: 150px;
-    @apply rounded-xl
-}
-
-.groupButton {
-    margin-left: 2rem;
-    margin-top: 1rem;
-}
-
-.groupButton button {
-    display: block;
-    padding: .375rem .75rem;
-    width: 100%;
-    margin-top: 10px;
-    color: #fff;
-    border-radius: 5px;
-    font-weight: 400;
-    font-size: 1rem;
-}
-
-.groupButton .btn_delete {
-    @apply bg-red-600 hover:bg-red-700
-}
-
-.groupButton .btn_upload {
-    @apply bg-zinc-600 hover:bg-zinc-700 cursor-pointer
-}
-
-.information {
-    font-size: 12pt;
-    margin-top: 2rem;
-    @apply text-gray-500
-}
-
-.information p {
-    font-weight: 500;
-}
 </style>

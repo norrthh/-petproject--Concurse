@@ -8,6 +8,8 @@ import TheUserComponent from "@/components/TheUserComponent.vue";
 import NotFound404Component from "@/components/NotFound/NotFound404Component.vue";
 import TheCreateNewsComponent from "@/components/User/News/TheCreateNewsComponent.vue";
 import TheSettingsIndexComponent from "@/components/User/Settings/TheSettingsIndexComponent.vue";
+import TheSettingsAvatarComponent from "@/components/User/Settings/TheSettingsAvatarComponent.vue";
+import TheSettingsPasswordComponent from "@/components/User/Settings/TheSettingsPasswordComponent.vue";
 
 const routes = [
     {path: '/', component: TheHomeComponent, meta: {title: 'Главная'}, name: 'index'},
@@ -18,7 +20,10 @@ const routes = [
 
     {path: '/user/news/create', component: TheCreateNewsComponent, meta: {title: 'Создать новости', auth: true}, name: 'news_create'},
     {path: '/user', component: TheUserComponent, meta: {auth: true, title: 'Профиль'}, name: 'profile'},
+
     {path: '/user/settings', component: TheSettingsIndexComponent, meta: {title: 'Настройки', auth: true}},
+    {path: '/user/settings/avatar', component: TheSettingsAvatarComponent, meta: {title: 'Настройки', auth: true}},
+    {path: '/user/settings/password', component: TheSettingsPasswordComponent, meta: {title: 'Настройки', auth: true}},
 ];
 
 const router = createRouter({

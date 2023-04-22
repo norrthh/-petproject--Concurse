@@ -9,6 +9,10 @@ body {
     font-size: 14pt;
 }
 
+h4 {
+    font-size: 1.5rem;
+}
+
 .newsIndex {
     margin-right: 1rem;
 }
@@ -98,4 +102,9 @@ body {
 
 .contentSettings h2{
     font-size: 1.75rem;
+}
+
+
+input, .fixInput {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 }

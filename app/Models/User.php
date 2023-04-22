@@ -14,13 +14,16 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'password',
+        'social_vk',
+        'social_telegram',
+        'email',
+        'social_vk_auth'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
-        'email',
-        'email_verified_at'
+        'email_verified_at',
     ];
 
     protected $casts = [

@@ -14,7 +14,7 @@ class ImageUploadController extends Controller
     public function news(ImageUploadRequest $request)
     {
         return response()->json([
-            'file' => $this->uploadImage($request->file('file'), 'news')
+            'file' => '/'.$this->uploadImage($request->file('file'), 'news')
         ]);
     }
 

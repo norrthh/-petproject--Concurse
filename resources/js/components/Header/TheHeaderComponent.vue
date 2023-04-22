@@ -140,7 +140,7 @@
                             <label for="email" class="label__auth">Ваш
                                 эмейл</label>
                             <input type="email" name="email" id="email"
-                                   class="input__auth"
+                                   class="fixInput"
                                    placeholder="name@galem.com" v-model="email">
                         </div>
 
@@ -148,7 +148,7 @@
                             <label for="password" class="label__auth">Ваш
                                 пароль</label>
                             <input type="password" name="password" id="password" placeholder="••••••••"
-                                   class="input__auth"
+                                   class="fixInput"
                                    v-model="password">
                         </div>
 
@@ -218,6 +218,7 @@
                             localStorage.setItem('account_name', res.data.user.name)
                             localStorage.setItem('account_id', res.data.user.id)
                             localStorage.setItem('account_avatar', res.data.user.avatar)
+                            localStorage.setItem('account', JSON.stringify(res.data.user))
 
                             this.statusAuth = true;
 
@@ -232,7 +233,6 @@
                                 this.showAlert(error.response.data.message)
                                 return 0;
                             }
-
                         })
                 })
             },
@@ -253,7 +253,6 @@
                 this.statusAlert = true;
             },
             checkAuth() {
-                // if (localStorage.getItem('X_XSRF_TOKEN')) {
                 axios.get('/sanctum/csrf-cookie')
                     .then(response => {
                         axios.get('/api/v1/user/checkAuth', {
@@ -292,6 +291,7 @@
             setInterval(() => {
                 if (localStorage.getItem('account_name')) {
                     this.avatarUser = localStorage.getItem('account_avatar');
+                    this.nicknameUser = localStorage.getItem('account_name')
                 }
             }, 5000);
 
@@ -318,9 +318,6 @@ header .navbar .router-link-active {
     color: #3252DF;
 }
 
-.input__auth {
-    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white
-}
 
 .label__auth {
     @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white

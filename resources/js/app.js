@@ -8,6 +8,7 @@ import TheAlertDangerComponent from "@/components/Alert/TheAlertDangerComponent.
 import './bootstrap';
 import 'flowbite';
 import TheAlertSuccessComponent from "@/components/Alert/TheAlertSuccessComponent.vue";
+import TheUserHeaderComponent from "@/components/User/Header/TheUserHeaderComponent.vue";
 
 const app = createApp({});
 
@@ -16,6 +17,9 @@ app.component('v-footer', TheFooterComponent);
 
 app.component('v-alert-danger', TheAlertDangerComponent);
 app.component('v-alert-success', TheAlertSuccessComponent)
+
+
+app.component('v-user-header', TheUserHeaderComponent)
 
 app.use(router);
 app.mount('#app');
