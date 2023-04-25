@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\v1\Image\ImageUploadController;
 use App\Http\Controllers\Api\v1\Information\HomeInformationController;
 use App\Http\Controllers\Api\v1\News\CommentsController;
 use App\Http\Controllers\Api\v1\News\NewsController;
+use App\Http\Controllers\Api\v1\User\Avatar\UserAvatarHistoryController;
+use App\Http\Controllers\Api\v1\User\Password\ChangePasswordController;
+use App\Http\Controllers\Api\v1\User\Password\HistoryChangePasswordController;
 use App\Http\Controllers\Api\v1\User\Settings\UserSettingsController;
 use App\Http\Controllers\Api\v1\User\UserController;
 use Illuminate\Http\Request;
@@ -37,15 +40,23 @@ Route::prefix('v1')->group(function () {
                 Route::prefix('avatar')->group(function (){
                     Route::post('/upload', [ImageUploadController::class, 'avatar']);
                     Route::post('/delete', [ImageUploadController::class, 'deleteAvatar']);
+                    Route::post('/history', [UserAvatarHistoryController::class, 'history']);
                 });
 
                 Route::post('/settings', [UserSettingsController::class, 'settings']);
+
+                Route::prefix('password')->group(function (){
+                    Route::post('/changePassword', [ChangePasswordController::class, 'change']);
+                    Route::post('/historyChangePassword', [HistoryChangePasswordController::class, 'change']);
+                });
             });
 
             Route::prefix('post')->group(function (){
-                Route::post('uploadImage', [ImageUploadController::class, 'news']);
-                Route::post('create', [NewsController::class, 'create']);
+                Route::post('/uploadImage', [ImageUploadController::class, 'news']);
+                Route::post('/create', [NewsController::class, 'create']);
             });
+
+
         });
 
     });

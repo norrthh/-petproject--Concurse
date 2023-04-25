@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Services\User\Avatar;
+use App\Models\HistoryChangeAvatar;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserUploadAvatarServices
 {
@@ -11,6 +13,12 @@ class UserUploadAvatarServices
 
         User::query()->where([['id', auth()->user()->id]])->update([
             'avatar' => '/'.$file
+        ]);
+
+        HistoryChangeAvatar::query()->create([
+            'user_id' => Auth::user()->id,
+            'avatar' => '/'. $file,
+            'IP' => request()->ip()
         ]);
 
         return response()->json([

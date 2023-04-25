@@ -5,7 +5,7 @@
 
             <div class="contentSettings">
 
-                <v-alert-danger class="w-full" :message="alertDangerMessage" v-if="alertDangerStatus"></v-alert-danger>
+                <v-alert-danger class="w-full" :message="alertDangerMessage" v-if="alertDangerMessage"></v-alert-danger>
                 <v-alert-success class="w-full" :message="alertSuccessMessage" v-if="alertSuccessMessage"/>
                 <h2>Управление аккаунтом</h2>
 
@@ -41,11 +41,15 @@
                             </div>
                         </div>
 
-                        <p class="text-gray-400 text-sm font-medium">Не указывайте полную ссылку, достаточно указать ваш логин.</p>
+                        <p class="text-gray-400 text-sm font-medium">Не указывайте полную ссылку, достаточно указать ваш
+                            логин.</p>
                     </div>
                 </div>
 
-                <button class="ml-auto block mr-auto mt-3 bg-blue-500 p-3 text-white rounded-xl text-sm w-32 hover:bg-blue-700" @click="updateDateAccount">Сохранить</button>
+                <button
+                    class="ml-auto block mr-auto mt-3 bg-blue-500 p-3 text-white rounded-xl text-sm w-32 hover:bg-blue-700"
+                    @click="updateDateAccount">Сохранить
+                </button>
             </div>
         </div>
     </div>
@@ -57,46 +61,27 @@ export default {
 
     data() {
         return {
-            avatar: '',
-            alertDangerStatus: false,
             alertDangerMessage: '',
-
-            alertSuccessStatus: false,
             alertSuccessMessage: '',
 
             name: '',
             email: '',
             socialVK: '',
-            socialTG: ''
+            socialTG: '',
+
         }
     },
 
     mounted() {
-        this.getDateSession()
+        let user = JSON.parse(localStorage.getItem('account'))
+
+        this.name = user.name
+        this.email = user.email
+        this.socialVK = user.social_vk
+        this.socialTG = user.social_telegram
     },
 
     methods: {
-        alert(message, status) {
-            if (status === 1) {
-                this.alertDangerStatus = false;
-                this.alertSuccessStatus = true;
-                this.alertSuccessMessage = message;
-
-            } else {
-                this.alertSuccessStatus = false;
-                this.alertDangerStatus = true;
-                this.alertDangerMessage = message;
-            }
-        },
-
-        getDateSession()    {
-            let user = JSON.parse(localStorage.getItem('account'))
-
-            this.name = user.name
-            this.email = user.email
-            this.socialVK = user.social_vk
-            this.socialTG = user.social_telegram
-        },
         updateDateAccount() {
 
             let data = {
@@ -107,21 +92,26 @@ export default {
             };
 
 
-            if(data.email === JSON.parse(localStorage.getItem('account')).email) {
+            if (data.email === JSON.parse(localStorage.getItem('account')).email) {
                 delete data['email']
             }
 
+            this.alertSuccessMessage = ''
+            this.alertDangerMessage = ''
 
-            axios.post('/api/v1/user/edit/settings', data)
+            axios.post('/api/v1/user/edit/settings', data, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('api_token'),
+                    }
+                })
                 .then(res => {
                     localStorage.setItem('account', JSON.stringify(res.data))
                     localStorage.setItem('account_name', res.data.name)
 
-                    this.alert('Вы успешно обновили значения', 1)
+                    this.alertSuccessMessage = 'Вы успешно обновили значения'
                 })
                 .catch(error => {
-                    // console.log(error.response.data.message)
-                    this.alert(error.response.data.message, 2)
+                    this.alertDangerMessage = error.response.data.message
                 })
         }
     }

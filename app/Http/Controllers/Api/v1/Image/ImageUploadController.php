@@ -30,7 +30,7 @@ class ImageUploadController extends Controller
 
     protected function uploadImage($file, $url)
     {
-        $fileName = uniqid() . '.' . $file->getClientOriginalName();
+        $fileName = uniqid();
 
         $file->move(public_path($url), $fileName);
         return $url.'/'.$fileName;

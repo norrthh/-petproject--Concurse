@@ -43,10 +43,10 @@
                                 </li>
                             </ul>
 
-                            <div class="py-2" style="padding: 0.25rem 0.5rem">
-                                <a href="#"
-                                   class="block px-4 py-2" style="font-size:1rem !important;">Выйти</a>
-                            </div>
+<!--                            <div class="py-2" style="padding: 0.25rem 0.5rem">-->
+<!--                                <a href="#"-->
+<!--                                   class="block px-4 py-2" style="font-size:1rem !important;">Выйти</a>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -253,8 +253,7 @@
                 this.statusAlert = true;
             },
             checkAuth() {
-                axios.get('/sanctum/csrf-cookie')
-                    .then(response => {
+                axios.get('/sanctum/csrf-cookie').then(response => {
                         axios.get('/api/v1/user/checkAuth', {
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('api_token')
@@ -262,8 +261,17 @@
                         })
                             .then(res => {
                                 this.statusAuth = true;
-                                this.nicknameUser = localStorage.getItem('account_name')
-                                this.avatarUser = localStorage.getItem('account_avatar')
+
+                                localStorage.setItem('account_name', res.data.name)
+                                localStorage.setItem('account_avatar', res.data.avatar)
+                                localStorage.setItem('account', JSON.stringify(res.data))
+
+                                this.nicknameUser = res.data.name
+                                this.avatarUser = res.data.name
+
+                            })
+                            .catch(error => {
+                                this.statusAuth = false;
                             })
                     });
                 // }

@@ -16,14 +16,14 @@
                             <img :src="avatar" class="avatar">
 
                             <div class="groupButton">
-                                <button class="btn_upload">
-                                    <label for="uploadAvatar">
+<!--                                <button class="btn_upload">-->
+                                    <label for="uploadAvatar" class="button btn_upload">
                                         Загрузить аватар
                                         <input type="file" id="uploadAvatar" class="hidden" multiple @change="uploadAvatar">
                                     </label>
-                                </button>
+<!--                                </button>-->
 
-                                <button class="btn_delete" @click="deleteAvatar">Удалить аватар</button>
+                                <button class="button btn_delete" @click="deleteAvatar">Удалить аватар</button>
                             </div>
                         </div>
 
@@ -36,8 +36,11 @@
                     <div class="ml-4 flex-initial">
                         <h4>Последние 10 аватаров, которые вы загружали</h4>
 
-                        <div class="grid grid-cols-5 gap-4">
-                            <img :src="avatar" class="avatar" v-for="i in 10">
+                        <div class="grid grid-cols-5 gap-4" v-if="avatarHistory.length > 0">
+                            <img v-for="avatar in avatarHistory" :src="avatar.avatar" class="avatar" >
+                        </div>
+                        <div v-if="avatarHistory.length ===  0">
+                            <p class="font-medium mt-10 text-gray-400">Вы еще не загружали аватаров!</p>
                         </div>
                     </div>
                 </div>
@@ -57,12 +60,15 @@ export default {
             alertDangerMessage: '',
 
             alertSuccessStatus: false,
-            alertSuccessMessage: ''
+            alertSuccessMessage: '',
+
+            avatarHistory: []
         }
     },
 
     mounted() {
         this.avatar = localStorage.getItem('account_avatar')
+        this.historyAvatar()
     },
 
     methods: {
@@ -77,9 +83,11 @@ export default {
                 }
             })
                 .then(res => {
+
                     localStorage.setItem('account_avatar', res.data.urlAvatar)
                     this.avatar = res.data.urlAvatar
-                    this.$emit('avatarUser', res.data.urlAvatar)
+
+                    this.historyAvatar()
 
                     this.alert('Вы успешно обновили аватарку', 1);
                 })
@@ -115,6 +123,17 @@ export default {
                 this.alertDangerStatus = true;
                 this.alertDangerMessage = message;
             }
+        },
+
+        historyAvatar() {
+            axios.post('/api/v1/user/edit/avatar/history', {},{
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('api_token'),
+                }
+            })
+                .then(res => {
+                    this.avatarHistory = res.data
+                })
         }
     }
 }
@@ -133,7 +152,7 @@ export default {
     margin-top: 1rem;
 }
 
-.groupButton button {
+.button {
     display: block;
     padding: 0.5rem 3rem;
     width: 100%;

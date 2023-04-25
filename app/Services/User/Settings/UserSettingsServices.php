@@ -20,12 +20,7 @@ class UserSettingsServices
 
         $data = array_filter($data);
 
-
         User::query()->where([['id', Auth::user()->id]])->update($data);
-
-        $message = [
-            'message' => 'Вы успешно обновили данные'
-        ];
 
         return response()->json(
             User::query()->where([['id', Auth::user()->id]])->first()
