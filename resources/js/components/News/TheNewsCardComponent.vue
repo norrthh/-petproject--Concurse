@@ -1,6 +1,6 @@
 <template>
     <router-link :to="`/news/post/${id}`" class="news">
-        <img :src="img" alt="" style="height: 300px; width: 100%">
+        <img :src="randomPhoto" alt="" style="height: 300px; width: 100%">
         <div class="content">
             <h1>{{ title }}</h1>
             <p class="info">{{ info }}</p>
@@ -12,13 +12,20 @@
 <script>
 export default {
     name: "TheNewsCardComponent",
-
     props: {
         id: Number,
         title: String,
         info: String,
         date: String,
         img: String,
+    },
+
+    computed: {
+        randomPhoto() {
+            const photosArray = JSON.parse(this.img);
+            const randomIndex = Math.floor(Math.random() * photosArray.length);
+            return photosArray[randomIndex];
+        }
     }
 }
 </script>

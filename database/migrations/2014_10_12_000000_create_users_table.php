@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->default('');
             $table->string('email')->unique();
             $table->string('password');
-            $table->longText('avatar')->default('/images/avatar.jpg');
+            $table->string('avatar')->default('/images/avatar.jpg');
             $table->integer('role')->default(0);
             $table->timestamps();
         });

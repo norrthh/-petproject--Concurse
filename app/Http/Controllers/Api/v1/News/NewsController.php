@@ -7,6 +7,8 @@ use App\Http\Requests\v1\News\NewsCreateRequest;
 use App\Http\Requests\v1\News\NewsIndexRequest;
 use App\Models\News;
 use App\Models\NewsContent;
+use App\Models\Post;
+use App\Services\News\NewsCreateServices;
 use App\Services\News\NewsListServices;
 use Illuminate\Http\Request;
 
@@ -23,30 +25,9 @@ class NewsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(NewsCreateRequest $request)
+    public function create(NewsCreateRequest $request, NewsCreateServices $services)
     {
-        News::query()->create([
-            'district_id' => 1,
-            'name' => '',
-            'author' => auth()->user()->id,
-            'nameTAT' => '',
-            'nameRU' => $request->input('namePost')
-        ]);
-
-        NewsContent::query()->create([
-            'post_id' => News::query()->orderBy('id', 'desc')->first()->id,
-            'text' => $request->input('informationPost'),
-            'textRU' => $request->input('informationPost'),
-            'textTAT' => $request->input('informationPost'),
-            'img_big' => $request->input('images1'),
-            'img_small_1' => $request->input('images2'),
-            'img_small_2' => $request->input('images3'),
-            'images' => 'delete'
-        ]);
-
-        return response()->json([
-            'message' => 'Новость успешно создалась',
-        ], 200);
+        return $services->create($request->all());
     }
 
     /**
@@ -62,7 +43,7 @@ class NewsController extends Controller
      */
     public function show(string $id)
     {
-        return News::query()->where('id', $id)->with('getContent')->get();
+        return Post::query()->where('id', $id)->get();
     }
 
     /**

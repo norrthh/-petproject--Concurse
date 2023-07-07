@@ -1,24 +1,17 @@
 <template>
     <div class="container mx-auto" v-for="news in newsInfo">
         <h1 class="text-center text-4xl text-blue-800 font-bold mt-8" id="title_post">
-            {{ news.nameRU }}
+            {{ news.title }}
         </h1>
 
 <!---->
-        <div class="grid grid-cols-3 gap-2 pt-14  max-[420px]:block">
-            <img class="h-96 rounded-xl"
-                 :src="news.get_content.img_big">
-            <img class="h-96 rounded-xl"
-                 :src="news.get_content.img_small_1">
-            <img class="h-96 rounded-xl"
-                 :src="news.get_content.img_small_2">
-        </div>
-<!---->
+
+        <!---->
         <div class="pt-5 text-gray-500">
             <div class="flex max-lg:block">
                 <div class="w-3/5 max-lg:w-full">
                     <p class="text-blue-800 font-bold text-2xl">Информация</p>
-                    <p>{{ news.get_content.textRU }}</p>
+                    <p>{{ news.text }}</p>
                 </div>
                 <div class="flex-1 max-lg:mt-8">
                     <p class="text-blue-800 font-bold text-2xl">Оставить комментарии</p>
@@ -60,6 +53,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="grid gap-4">
+            <div>
+                <img class="max-w-full rounded-lg" style="height:500px" :src="getPhotos[Math.floor(Math.random() * getPhotos.length)]" alt="">
+            </div>
+            <div class="grid grid-cols-5 gap-4">
+                <div v-for="i in getPhotos">
+                    <img class="h-auto max-w-full rounded-lg" :src="i" alt="">
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -70,6 +74,7 @@ export default {
     data() {
         return {
             newsInfo: [],
+            getPhotos: [],
             commentsInfo: [],
 
             alertErrorStatus: false,
@@ -86,10 +91,13 @@ export default {
         axios.get('/api/v1/news/' + this.$route.params.page)
             .then(res => {
                 this.newsInfo = res.data;
+                this.getPhotos = JSON.parse(res.data[0].photos);
                 console.log(res.data)
             })
 
-        this.getComments()
+        this.getComments();
+
+        // getPhotos[Math.floor(Math.random() * getPhotos.length)]
     },
 
     methods: {

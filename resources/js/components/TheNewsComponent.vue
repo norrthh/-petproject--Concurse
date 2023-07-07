@@ -1,8 +1,8 @@
 <template>
     <div class="container mx-auto mt-4">
-        <div class="grid grid-cols-3 gap-4">
-            <NewsCard v-for="news in getNews" :id="news.id" :title="news.nameRU" :info="news.get_content.textRU"
-                      :date="news.get_content.created_at" :img="news.get_content.img_big"></NewsCard>
+            <div class="grid grid-cols-3 gap-4">
+                <NewsCard v-for="news in getNews" :id="news.id" :title="news.title" :info="news.text"
+                          :date="news.created_at" :img="news.photos"></NewsCard>
         </div>
     </div>
 </template>
@@ -15,12 +15,13 @@ export default {
 
     data() {
         return {
-            getNews: []
+            getNews: [],
+            getPhotos: []
         }
     },
 
     mounted() {
-        this.getRNews()
+        this.getRNews();
     },
 
     methods: {
@@ -34,7 +35,8 @@ export default {
 
     components: {
         NewsCard: TheNewsCardComponent
-    }
+    },
+
 }
 </script>
 

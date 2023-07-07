@@ -62,9 +62,9 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    Route::prefix('chatgpt')->group(function (){
-        Route::get('/search', [ChatGPTSearchController::class, 'search']);
-    });
+//    Route::prefix('chatgpt')->group(function (){
+//        Route::get('/search', [ChatGPTSearchController::class, 'search']);
+//    });
 });
 
 

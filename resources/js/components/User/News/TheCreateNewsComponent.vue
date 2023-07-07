@@ -24,8 +24,8 @@
                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Загрузить картинки</label>
 
             <div class="grid grid-cols-3 gap-4">
-                <div class="flex items-center justify-center w-full">
-                    <label for="dropInput_1" v-if="dropInput_1"
+                <div class="flex items-center justify-center w-full" v-for="i in inputInt">
+                    <label :for="'dropInput_' + i"
                            class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none"
@@ -37,57 +37,24 @@
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
                         </div>
-                        <input id="dropInput_1" type="file" class="hidden" @change="uploadFile" multiple>
-                        <input type="text" class="hidden" :value='input_file_1'>
+                        <input :id="'dropInput_' + i" name="file[]" type="file" class="hidden" @change="uploadFile">
                     </label>
 
-                    <div class="rounded-xl" v-if="!dropInput_1">
-                        <img :src="input_file_1" class="rounded-2xl h-64">
+                    <div class="rounded-xl" :id="'blockInputFile' + i">
+                        <img :id="'inputFIle_' + i" class="rounded-2xl h-64" alt="">
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center w-full">
-                    <label for="dropInput_2" v-if="dropInput_2"
-                           class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                <div class="flex items-center justify-center w-full" @click="createInput">
+                    <div class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none"
-                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-3 text-gray-400"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
                             </svg>
-                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Нажмите, что б загрузить картинку</span>
-                            </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Добавить инпут для картинок</span></p>
                         </div>
-                        <input id="dropInput_2" type="file" class="hidden" @change="uploadFile" multiple>
-                        <input type="text" class="hidden" :value='input_file_2'>
-                    </label>
-
-                    <div class="rounded-xl" v-if="!dropInput_2">
-                        <img :src="input_file_2" class="rounded-2xl h-64">
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-center w-full">
-                    <label for="dropInput_3" v-if="dropInput_3"
-                           class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none"
-                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Нажмите, что б загрузить картинку</span>
-                            </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
-                        </div>
-
-                        <input id="dropInput_3" type="file" class="hidden" @change="uploadFile" multiple>
-                        <input type="text" class="hidden" :value='input_file_3'>
-                    </label>
-
-                    <div class="rounded-xl" v-if="!dropInput_3">
-                        <img :src="input_file_3" class="rounded-2xl h-64">
                     </div>
                 </div>
             </div>
@@ -97,48 +64,7 @@
                 Создать пост
             </button>
 
-            <button type="button" @click="chatGPT"
-                    class="ml-4 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                Поиск информации СhatGPT
-            </button>
-
         </form>
-    </div>
-
-    <div id="chatGPT-modal" tabindex="-1" aria-hidden="true"
-         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-lg max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg  dark:bg-gray-700">
-                <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Поиск информации СhatGPT</h3>
-
-                    <form class="space-y-6">
-
-                        <div>
-                            <div>
-                                <label for="chatGPT" class="text-lg">Суть запроса</label>
-                                <input type="email" name="email" id="chatGPT"
-                                       class="fixInput"
-                                       placeholder="Болгар Туган Тел" v-model="chatGPTInput" required>
-                            </div>
-                            <button type="submit" @click="chatGPTRequest"
-                                    class="mt-3 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">
-                                Поиск
-                            </button>
-                        </div>
-
-                        <div v-if="chatGPTResult">
-                            <p class="text-gray-400 text-lg">Результат</p>
-
-                            <p>{{  chatGPTResult }}</p>
-                        </div>
-
-                        <v-alert-danger :message="messageAlert" v-if="statusAlert"></v-alert-danger>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -160,68 +86,50 @@ export default {
                         Authorization: 'Bearer ' + localStorage.getItem('api_token')
                     }
                 }).then(res => {
-                    if (event.target.attributes[0]['textContent'] === 'dropInput_1') {
-                        this.input_file_1 = res.data.file;
-                        this.dropInput_1 = false;
-                    }
+                    let number = parseInt(event.target.attributes[0].value.match(/\d+/)[0]); // получаем ID блока, с которого загружаем файл
+                    let label = document.querySelector('label[for="dropInput_'+ number +'"]');
+                    label.style.display = 'none';
 
-                    if (event.target.attributes[0]['textContent'] === 'dropInput_2') {
-                        this.input_file_2 = res.data.file;
-                        this.dropInput_2 = false;
-                    }
+                    let imgFile = document.getElementById('inputFIle_' + number);
+                    imgFile.setAttribute('src', res.data.file);
 
-                    if (event.target.attributes[0]['textContent'] === 'dropInput_3') {
-                        this.input_file_3 = res.data.file;
-                        this.dropInput_3 = false;
-                    }
+                    console.log(number);
+
+                    this.input_file[number] = res.data.file;
                 })
             });
         },
         createPost() {
-            axios.post('/api/v1/user/post/create', {
-                'namePost': this.namePost,
-                'informationPost': this.informationPost,
-                'images1': this.input_file_1,
-                'images2': this.input_file_2,
-                'images3': this.input_file_3,
-            })
-                .then(res => {
-                    this.alertSuccessStatus = true
-                    this.alertSuccessMessage = res.data.message
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/api/v1/user/post/create', {
+                    'namePost': this.namePost,
+                    'informationPost': this.informationPost,
+                    'img': this.input_file,
+                }, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('api_token')
+                    }
                 })
-                .catch(error => {
-                    console.log(error.data)
-                })
+                    .then(res => {
+                        this.alertSuccessStatus = true
+                        this.alertSuccessMessage = res.data.message
+                    })
+                    .catch(error => {
+                        console.log(error.response.data.errors)
+                        this.alertDangerText = error.response.data.message;
+                        this.alertDangerStatus = true;
+                    })
+            });
         },
-
-        chatGPT() {
-            const chatGPT = new Modal(
-                document.getElementById('chatGPT-modal'),
-                {
-                    backdrop: 'dynamic',
-                    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
-                    closable: true,
-                }
-            );
-            chatGPT.show()
-        },
-
-        chatGPTRequest() {
-            if (!this.chatGPTInput) {
-                return false;
-            }
-         }
+        createInput() {
+            this.inputInt++
+        }
     },
 
     data() {
         return {
-            input_file_1: '',
-            input_file_2: '',
-            input_file_3: '',
-
-            dropInput_1: true,
-            dropInput_2: true,
-            dropInput_3: true,
+            input_file: {},
+            inputInt: 1,
 
             namePost: '',
             informationPost: '',
@@ -229,12 +137,8 @@ export default {
             alertDangerText: '',
             alertDangerStatus: false,
 
-
             alertSuccessStatus: false,
             alertSuccessMessage: '',
-
-            chatGPTInput: '',
-            chatGPTResult: '',
         }
     },
 

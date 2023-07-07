@@ -26,7 +26,7 @@ class ChatGPTSearchServices
         $response = $client->post('https://api.openai.com/v1/chat/completions', [
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer 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',
+                'Authorization' => 'Bearer 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',
             ],
             'json' => [
                 'model' => 'gpt-3.5-turbo',

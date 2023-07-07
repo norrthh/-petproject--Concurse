@@ -16,9 +16,6 @@ class NewsCreateRequest extends FormRequest
         return [
             'namePost' => ['required', 'string'],
             'informationPost' => ['required', 'string'],
-            'images1' => ['required'],
-            'images2' => ['required'],
-            'images3' => ['required'],
         ];
     }
 
@@ -27,9 +24,6 @@ class NewsCreateRequest extends FormRequest
         return [
             'namePost.required' => 'Заполните поле с названием поста',
             'informationPost.required' => 'Заполните поля с информацией о посту',
-            'images1.required' => 'Загрузите все картинки',
-            'images2.required' => 'Загрузите все картинки',
-            'images3.required' => 'Загрузите все картинки',
         ];
     }
 }
