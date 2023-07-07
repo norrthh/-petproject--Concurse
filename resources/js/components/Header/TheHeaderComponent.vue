@@ -3,7 +3,7 @@
         <div class="container mx-auto">
             <div class="flex">
                 <div class="logo">
-                    <img src="/images/logo.png" alt="">
+                    <img src="/images/avatar.jpg" class="w-12" alt="">
                 </div>
 
                 <div class="flex w-full navbar" style="margin-top: 10px">
@@ -32,8 +32,10 @@
                             <ul class="py-2 text-base text-gray-700 dark:text-gray-200" style="padding: 0.25rem 0.5rem">
                                 <li>
                                     <router-link to="/user/settings"
-                                       class="block px-4 py-2 " style="font-size:1rem !important;">Настройки</router-link>
+                                                 class="block px-4 py-2 " style="font-size:1rem !important;">Настройки
+                                    </router-link>
                                 </li>
+
 
                                 <li>
                                     <router-link to="/user/news/create"
@@ -42,11 +44,6 @@
                                     </router-link>
                                 </li>
                             </ul>
-
-<!--                            <div class="py-2" style="padding: 0.25rem 0.5rem">-->
-<!--                                <a href="#"-->
-<!--                                   class="block px-4 py-2" style="font-size:1rem !important;">Выйти</a>-->
-<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -120,17 +117,6 @@
         <div class="relative w-full max-w-md max-h-full">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <button type="button"
-                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Авторизуйтесь в нашу
                         платформу</h3>
@@ -160,6 +146,51 @@
 
                         <v-alert-danger :message="messageAlert" v-if="statusAlert"></v-alert-danger>
                     </form>
+
+                    <button
+                        class="text-sm text-center  m-auto pt-4 flex justify-center"
+                        type="button" @click="showModalRegister">
+                        Нет аккаунта? Зарегистрироваться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="register-modal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg  dark:bg-gray-700">
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Зарегистрироваться в нашу
+                        платформу</h3>
+
+                    <form class="space-y-6">
+
+                        <div>
+                            <label for="email" class="label__auth">Ваш
+                                эмейл</label>
+                            <input type="email" name="email" id="email"
+                                   class="fixInput"
+                                   placeholder="name@galem.com" v-model="email">
+                        </div>
+
+                        <div>
+                            <label for="password" class="label__auth">Ваш
+                                пароль</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••"
+                                   class="fixInput"
+                                   v-model="password">
+                        </div>
+
+                        <button type="button"
+                                class="btn__auth"
+                                @click="register">
+                            Зарегистрироваться
+                        </button>
+
+                        <v-alert-danger :message="messageAlert" v-if="statusAlert"></v-alert-danger>
+                    </form>
                 </div>
             </div>
         </div>
@@ -168,143 +199,193 @@
 
 <script>
 
-    import {Modal, Dropdown} from 'flowbite';
+import {Modal, Dropdown} from 'flowbite';
 
-    export default {
-        name: "TheHeaderComponent",
+export default {
+    name: "TheHeaderComponent",
 
-        data() {
-            return {
-                navs: [
-                    {
-                        'path': '/',
-                        'title': 'Главная'
-                    },
-                    {
-                        'path': '/news',
-                        'title': 'Новости'
-                    },
-                ],
+    data() {
+        return {
+            navs: [
+                {
+                    'path': '/',
+                    'title': 'Главная'
+                },
+                {
+                    'path': '/news',
+                    'title': 'Новости'
+                },
+            ],
 
-                email: '',
-                password: '',
+            email: '',
+            password: '',
 
-                messageAlert: '',
+            messageAlert: '',
 
-                statusAlert: false,
-                statusAuth: false,
+            statusAlert: false,
+            statusAuth: false,
 
-                nicknameUser: 'Авторизуйтесь',
-                avatarUser: '',
+            nicknameUser: 'Авторизуйтесь',
+            avatarUser: '',
+            user: {},
+        }
+    },
+    methods: {
+        auth() {
+            if (this.email === '' || this.password === '') {
+                this.showAlert('Заполните все поля')
+                return 0;
             }
-        },
-        methods: {
-            auth() {
-                if (this.email === '' || this.password === '') {
-                    this.showAlert('Заполните все поля')
-                    return 0;
-                }
 
-                axios.get('/sanctum/csrf-cookie').then(response => {
-                    axios.post('/api/v1/login', {
-                        email: this.email,
-                        password: this.password
-                    })
-                        .then(res => {
-                            localStorage.setItem('api_token', res.data.token)
-
-                            window.location.href = "/user";
-
-                            localStorage.setItem('account_name', res.data.user.name)
-                            localStorage.setItem('account_id', res.data.user.id)
-                            localStorage.setItem('account_avatar', res.data.user.avatar)
-                            localStorage.setItem('account', JSON.stringify(res.data.user))
-
-                            this.statusAuth = true;
-
-                            this.nicknameUser = localStorage.getItem('account_name')
-                            this.avatarUser = localStorage.getItem('account_avatar')
-
-                            window.location.href = "/user";
-                        })
-
-                        .catch(error => {
-                            if (error.response.statusText === 'Unauthorized') {
-                                this.showAlert(error.response.data.message)
-                                return 0;
-                            }
-                        })
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/api/v1/login', {
+                    email: this.email,
+                    password: this.password
                 })
-            },
-            showModal() {
-                const $targetEl = document.getElementById('authentication-modal');
+                    .then(res => {
+                        localStorage.setItem('api_token', res.data.token)
 
-                const options = {
+                        window.location.href = "/user";
+
+                        localStorage.setItem('account_name', res.data.user.name)
+                        localStorage.setItem('account_id', res.data.user.id)
+                        localStorage.setItem('account_avatar', res.data.user.avatar)
+                        localStorage.setItem('account', JSON.stringify(res.data.user))
+
+                        this.statusAuth = true;
+
+                        this.nicknameUser = localStorage.getItem('account_name')
+                        this.avatarUser = localStorage.getItem('account_avatar')
+
+                        window.location.href = "/user";
+                    })
+
+                    .catch(error => {
+                        if (error.response.statusText === 'Unauthorized') {
+                            this.showAlert(error.response.data.message)
+                            return 0;
+                        }
+                    })
+            })
+        },
+
+        register() {
+            if (this.email === '' || this.password === '') {
+                this.showAlert('Заполните все поля')
+                return 0;
+            }
+
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/api/v1/register', {
+                    email: this.email,
+                    password: this.password
+                })
+                    .then(res => {
+                        localStorage.setItem('api_token', res.data.token)
+
+                        window.location.href = "/user";
+
+                        localStorage.setItem('account_name', res.data.user.name)
+                        localStorage.setItem('account_id', res.data.user.id)
+                        localStorage.setItem('account_avatar', res.data.user.avatar)
+                        localStorage.setItem('account', JSON.stringify(res.data.user))
+
+                        this.statusAuth = true;
+
+                        this.nicknameUser = localStorage.getItem('account_name')
+                        this.avatarUser = localStorage.getItem('account_avatar')
+
+                        window.location.href = "/user";
+                    })
+
+                    .catch(error => {
+                        if (error.response.statusText === 'Unauthorized') {
+                            this.showAlert(error.response.data.message)
+                            return 0;
+                        }
+                    })
+            })
+        },
+
+        showModalRegister() {
+            const register = new Modal(
+                document.getElementById('register-modal'),
+                {
                     backdrop: 'dynamic',
                     backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
                     closable: true,
-                };
-
-                const modal = new Modal($targetEl, options);
-                modal.show()
-            },
-            showAlert(text) {
-                this.messageAlert = text;
-                this.statusAlert = true;
-            },
-            checkAuth() {
-                axios.get('/sanctum/csrf-cookie').then(response => {
-                        axios.get('/api/v1/user/checkAuth', {
-                            headers: {
-                                Authorization: 'Bearer ' + localStorage.getItem('api_token')
-                            }
-                        })
-                            .then(res => {
-                                this.statusAuth = true;
-
-                                localStorage.setItem('account_name', res.data.name)
-                                localStorage.setItem('account_avatar', res.data.avatar)
-                                localStorage.setItem('account', JSON.stringify(res.data))
-
-                                this.nicknameUser = res.data.name
-                                this.avatarUser = res.data.name
-
-                            })
-                            .catch(error => {
-                                this.statusAuth = false;
-                            })
-                    });
-                // }
-            },
-            dropdownUser() {
-                const $targetEl = document.getElementById('dropdownAvatarName');
-                const $triggerEl = document.getElementById('dropdownAvatarNameButton');
-
-                const options = {
-                    placement: 'bottom',
-                    triggerType: 'click',
-                    offsetSkidding: 0,
-                    offsetDistance: 10,
-                    delay: 300,
-                };
-
-                const dropdown = new Dropdown($targetEl, $triggerEl, options);
-            },
-        },
-        mounted() {
-            this.checkAuth()
-            this.dropdownUser()
-
-
-            setInterval(() => {
-                if (localStorage.getItem('account_name')) {
-                    this.avatarUser = localStorage.getItem('account_avatar');
-                    this.nicknameUser = localStorage.getItem('account_name')
                 }
-            }, 5000);
-
+            );
+            register.show()
         },
-    }
+
+        showModal() {
+            const auth = new Modal(
+                document.getElementById('authentication-modal'),
+                {
+                    backdrop: 'dynamic',
+                    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+                    closable: true,
+                }
+            );
+            auth.show()
+        },
+        showAlert(text) {
+            this.messageAlert = text;
+            this.statusAlert = true;
+        },
+        checkAuth() {
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.get('/api/v1/user/checkAuth', {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('api_token')
+                    }
+                })
+                    .then(res => {
+                        this.statusAuth = true;
+
+                        localStorage.setItem('account_name', res.data.name)
+                        localStorage.setItem('account_avatar', res.data.avatar)
+                        localStorage.setItem('account', JSON.stringify(res.data))
+
+                        this.nicknameUser = res.data.name
+                        this.avatarUser = res.data.name
+
+                    })
+                    .catch(error => {
+                        this.statusAuth = false;
+                    })
+            });
+        },
+        dropdownUser() {
+            const $targetEl = document.getElementById('dropdownAvatarName');
+            const $triggerEl = document.getElementById('dropdownAvatarNameButton');
+
+            const options = {
+                placement: 'bottom',
+                triggerType: 'click',
+                offsetSkidding: 0,
+                offsetDistance: 10,
+                delay: 300,
+            };
+
+            const dropdown = new Dropdown($targetEl, $triggerEl, options);
+        },
+    },
+    mounted() {
+        this.checkAuth()
+        this.dropdownUser()
+
+        setInterval(() => {
+            if (localStorage.getItem('account_name')) {
+                this.avatarUser = localStorage.getItem('account_avatar');
+                this.nicknameUser = localStorage.getItem('account_name');
+                this.user = JSON.parse(localStorage.getItem('account'))
+            }
+        }, 2000);
+
+    },
+}
 </script>
 <style scoped>
 header {

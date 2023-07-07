@@ -23,7 +23,11 @@ class EventServiceProvider extends ServiceProvider
 
         QueryExecuted::class  => [
             QueryExecutedListener::class
-        ]
+        ],
+
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            \SocialiteProviders\VKontakte\VKontakteExtendSocialite::class.'@handle',
+        ],
     ];
 
     /**

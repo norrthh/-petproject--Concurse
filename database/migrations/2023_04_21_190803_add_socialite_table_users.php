@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('social_vk');
-            $table->integer('social_vk_auth');
-            $table->string('social_telegram');
-//            $table->string('social_telegram');
+            $table->string('social_vk')->default('');
+            $table->string('social_telegram')->default('');
         });
     }
 

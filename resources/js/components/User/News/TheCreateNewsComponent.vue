@@ -5,7 +5,7 @@
             <v-alert-success :message="alertSuccessMessage" v-if="alertSuccessMessage"></v-alert-success>
 
             <div>
-                <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Название
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Название
                     поста</label>
                 <input type="text" v-model="namePost"
                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
@@ -41,9 +41,8 @@
                         <input type="text" class="hidden" :value='input_file_1'>
                     </label>
 
-
                     <div class="rounded-xl" v-if="!dropInput_1">
-                        <img :src="input_file_1" class="rounded-2xl">
+                        <img :src="input_file_1" class="rounded-2xl h-64">
                     </div>
                 </div>
 
@@ -65,14 +64,13 @@
                     </label>
 
                     <div class="rounded-xl" v-if="!dropInput_2">
-                        <img :src="input_file_2" class="rounded-2xl">
+                        <img :src="input_file_2" class="rounded-2xl h-64">
                     </div>
                 </div>
 
                 <div class="flex items-center justify-center w-full">
                     <label for="dropInput_3" v-if="dropInput_3"
                            class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none"
                                  stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -85,12 +83,11 @@
                         </div>
 
                         <input id="dropInput_3" type="file" class="hidden" @change="uploadFile" multiple>
-
                         <input type="text" class="hidden" :value='input_file_3'>
                     </label>
 
                     <div class="rounded-xl" v-if="!dropInput_3">
-                        <img :src="input_file_3" class="rounded-2xl">
+                        <img :src="input_file_3" class="rounded-2xl h-64">
                     </div>
                 </div>
             </div>
@@ -99,18 +96,57 @@
                     class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300">
                 Создать пост
             </button>
+
+            <button type="button" @click="chatGPT"
+                    class="ml-4 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                Поиск информации СhatGPT
+            </button>
+
         </form>
+    </div>
+
+    <div id="chatGPT-modal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-lg max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg  dark:bg-gray-700">
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Поиск информации СhatGPT</h3>
+
+                    <form class="space-y-6">
+
+                        <div>
+                            <div>
+                                <label for="chatGPT" class="text-lg">Суть запроса</label>
+                                <input type="email" name="email" id="chatGPT"
+                                       class="fixInput"
+                                       placeholder="Болгар Туган Тел" v-model="chatGPTInput" required>
+                            </div>
+                            <button type="submit" @click="chatGPTRequest"
+                                    class="mt-3 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">
+                                Поиск
+                            </button>
+                        </div>
+
+                        <div v-if="chatGPTResult">
+                            <p class="text-gray-400 text-lg">Результат</p>
+
+                            <p>{{  chatGPTResult }}</p>
+                        </div>
+
+                        <v-alert-danger :message="messageAlert" v-if="statusAlert"></v-alert-danger>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import {Modal} from "flowbite";
+
 export default {
     name: "TheCreateNewsComponent",
-
-    mounted() {
-
-    },
-
 
     methods: {
         uploadFile(event) {
@@ -153,11 +189,28 @@ export default {
                     this.alertSuccessStatus = true
                     this.alertSuccessMessage = res.data.message
                 })
-
                 .catch(error => {
                     console.log(error.data)
                 })
-        }
+        },
+
+        chatGPT() {
+            const chatGPT = new Modal(
+                document.getElementById('chatGPT-modal'),
+                {
+                    backdrop: 'dynamic',
+                    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+                    closable: true,
+                }
+            );
+            chatGPT.show()
+        },
+
+        chatGPTRequest() {
+            if (!this.chatGPTInput) {
+                return false;
+            }
+         }
     },
 
     data() {
@@ -178,9 +231,13 @@ export default {
 
 
             alertSuccessStatus: false,
-            alertSuccessMessage: ''
+            alertSuccessMessage: '',
+
+            chatGPTInput: '',
+            chatGPTResult: '',
         }
-    }
+    },
+
 }
 </script>
 
